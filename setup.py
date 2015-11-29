@@ -13,7 +13,7 @@ def long_description():
     return(readme_text)
 
 setup(name='PyUserInput',
-      version='0.1.9',
+      version='0.1.10',
       description='A simple, cross-platform module for mouse and keyboard control',
       long_description=long_description(),
       author='Paul Barton',
