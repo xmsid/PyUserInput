@@ -16,10 +16,9 @@ setup(name='PyUserInput',
       version='0.1.10',
       description='A simple, cross-platform module for mouse and keyboard control',
       long_description=long_description(),
-      author='Paul Barton',
-      #Original author of PyMouse: Pepijn de Vos
-      author_email='pablo.barton@gmail.com',
-      url='https://github.com/SavinaRoja/PyUserInput',
+      author='Paul Barton <pablo.barton@gmail.com>, Pepijn de Vos <pepijndevos@gmail.com>',
+      author_email='pablo.barton@gmail.com',  # Replace with mailing list perhaps
+      url='https://github.com/PyUserInput/PyUserInput',
       package_dir = {'': '.'},
       packages = ['pykeyboard', 'pymouse'],
       license='http://www.gnu.org/licenses/gpl-3.0.html',
