@@ -22,6 +22,43 @@ import time
 from threading import Thread
 
 
+class KeyboardBase(object):
+    """
+    This is the base class for PyKeyboard. It outlines the basic interface and
+    the details for each platform are to be implemented in their own respective
+    subclasses.
+
+    Platform specific keyboard features are not prohibited, but be sure to
+    document them and provide explicit warnings.
+
+    Beware all ye who enter here... The land of keyboards is a fiendishly
+    imposing territory inhabited by confounding beasts such as keyboard models,
+    layouts, locales, keycodes, keysyms, scan codes, modifiers, combinators, and
+    more.
+    """
+
+    def __init__(self, layout=None):
+        pass
+
+    def char_to_key(self, char):
+        pass
+
+    def string_to_keys(self, s):
+        return [self.char_to_key(c) for c in s]
+
+    def press_key(self, k):
+        pass
+
+    def release_key(self, k):
+        pass
+
+    def tap_key(self, k, hold=0):
+        self.press_key(k)
+        if hold > 0:
+            time.sleep(hold)
+        self.release_key(k)
+
+
 class PyKeyboardMeta(object):
     """
     The base class for PyKeyboard. Represents basic operational model.
