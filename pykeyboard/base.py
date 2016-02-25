@@ -36,8 +36,15 @@ class KeyboardBase(object):
     layouts, locales, keycodes, keysyms, scan codes, modifiers, combinators, and
     more.
     """
+    
+    #Where a variable is named "key", it is meant to represent an idealized key.
+    #This is may also be called a "virtual key", and is to be distinguished from
+    #character such as 'A' (Though there may be an "A" key in the layout) or from
+    #a key name such as "Caps_Lock"
 
     def __init__(self, layout=None):
+        #If the layout is None, the Keyboard instance will use whatever is the system
+        #default currently in place
         pass
 
     def char_to_key(self, char):
@@ -46,18 +53,42 @@ class KeyboardBase(object):
     def string_to_keys(self, s):
         return [self.char_to_key(c) for c in s]
 
-    def press_key(self, k):
+    def press_key(self, key):
         pass
 
-    def release_key(self, k):
+    def release_key(self, key):
         pass
 
-    def tap_key(self, k, hold=0):
-        self.press_key(k)
+    def tap_key(self, key, hold=0):
+        self.press_key(key)
         if hold > 0:
             time.sleep(hold)
         self.release_key(k)
 
+    def key_combo(self, key_list, delay=0)
+        """
+        Takes a list of keys, `key_list`, and sequentially presses each key in the list,
+        starting from index 0, then sequentially releases each key in the list in the
+        opposite order.
+        
+        For example, to produce the familiar Windows combo "Ctrl+Alt+Del" one would call
+        this function as:
+          k.key_combo([k.control_key, k.alt_key, k.delete_key])
+        where `k` is the Keyboard instance.
+        
+        The optional argument `delay` may be a positive number representing a period of time
+        to elapse between each key press event produced by this function.
+        """
+        try:
+            key, remaining = key_list[0], key_list[1:]
+        except IndexError:
+            return None
+        else:
+            self.press_key(key)
+            if delay > 0:
+                time.sleep(delay)
+            self.key_combo(remaining, delay=delay)
+            self.release_key(key)
 
 class PyKeyboardMeta(object):
     """
