@@ -18,6 +18,11 @@ import Quartz
 from AppKit import NSEvent
 from .base import PyKeyboardMeta, PyKeyboardEventMeta
 
+# NSEvent.h
+# Check event types on https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit
+# /Classes/NSEvent_Class/#//apple_ref/c/tdef/NSEventType
+NSSystemDefined = 14
+
 # Taken from events.h
 # /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Headers/Events.h
 character_translate_table = {
@@ -124,11 +129,11 @@ class PyKeyboard(PyKeyboardMeta):
     def __init__(self):
       self.shift_key = 'shift'
       self.modifier_table = {'Shift':False,'Command':False,'Control':False,'Alternate':False}
-        
+
     def press_key(self, key):
-        if key.title() in self.modifier_table: 
+        if key.title() in self.modifier_table:
             self.modifier_table.update({key.title():True})
-                    
+
         if key in special_key_translate_table:
             self._press_special_key(key, True)
         else:
@@ -137,7 +142,7 @@ class PyKeyboard(PyKeyboardMeta):
     def release_key(self, key):
         # remove the key
         if key.title() in self.modifier_table: self.modifier_table.update({key.title():False})
-        
+
         if key in special_key_translate_table:
             self._press_special_key(key, False)
         else:
@@ -162,7 +167,7 @@ class PyKeyboard(PyKeyboardMeta):
             for mkey in self.modifier_table:
                 if self.modifier_table[mkey]:
                     if len(mkeyStr)>1: mkeyStr = mkeyStr+' ^ '
-                    mkeyStr = mkeyStr+'Quartz.kCGEventFlagMask'+mkey                    
+                    mkeyStr = mkeyStr+'Quartz.kCGEventFlagMask'+mkey
             if len(mkeyStr)>1: eval('Quartz.CGEventSetFlags(event, '+mkeyStr+')')
             Quartz.CGEventPost(Quartz.kCGHIDEventTap, event)
             if key.lower() == "shift":
@@ -172,7 +177,7 @@ class PyKeyboard(PyKeyboardMeta):
             raise RuntimeError("Key {} not implemented.".format(key))
 
     def _press_special_key(self, key, down):
-        """ Helper method for special keys. 
+        """ Helper method for special keys.
 
         Source: http://stackoverflow.com/questions/11045814/emulate-media-key-press-on-mac
         """
@@ -190,7 +195,7 @@ class PyKeyboard(PyKeyboardMeta):
                 -1 # data2
             )
 
-        Quartz.CGEventPost(0, ev.Quartz.CGEvent())
+        Quartz.CGEventPost(0, ev.CGEvent())
 
 class PyKeyboardEvent(PyKeyboardEventMeta):
     def run(self):
