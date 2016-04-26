@@ -15,13 +15,8 @@
 
 import time
 import Quartz
-from AppKit import NSEvent
+from AppKit import NSSystemDefined, NSEvent
 from .base import PyKeyboardMeta, PyKeyboardEventMeta
-
-# NSEvent.h
-# Check event types on https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit
-# /Classes/NSEvent_Class/#//apple_ref/c/tdef/NSEventType
-NSSystemDefined = 14
 
 # Taken from events.h
 # /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Headers/Events.h
