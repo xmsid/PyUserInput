@@ -89,6 +89,74 @@ character_translate_table = {
     'function' : 0x3F,
 }
 
+key_code_translate_table = {
+ 0x00 : 'a',
+ 0x01 : 's',
+ 0x02 : 'd',
+ 0x03 : 'f',
+ 0x04 : 'h',
+ 0x05 : 'g',
+ 0x06 : 'z',
+ 0x07 : 'x',
+ 0x08 : 'c',
+ 0x09 : 'v',
+ 0x0b : 'b',
+ 0x0c : 'q',
+ 0x0d : 'w',
+ 0x0e : 'e',
+ 0x0f : 'r',
+ 0x10 : 'y',
+ 0x11 : 't',
+ 0x12 : '1',
+ 0x13 : '2',
+ 0x14 : '3',
+ 0x15 : '4',
+ 0x16 : '6',
+ 0x17 : '5',
+ 0x18 : '=',
+ 0x19 : '9',
+ 0x1a : '7',
+ 0x1b : '-',
+ 0x1c : '8',
+ 0x1d : '0',
+ 0x1e : ']',
+ 0x1f : 'o',
+ 0x20 : 'u',
+ 0x21 : '[',
+ 0x22 : 'i',
+ 0x23 : 'p',
+ 0x25 : 'l',
+ 0x26 : 'j',
+ 0x27 : '\'',
+ 0x28 : 'k',
+ 0x29 : ';',
+ 0x2a : '\\',
+ 0x2b : ',',
+ 0x2c : '/',
+ 0x2d : 'n',
+ 0x2e : 'm',
+ 0x2f : '.',
+ 0x32 : '`',
+ 0x31 : ' ',
+ 0x24 : '\r',
+ 0x30 : '\t',
+ 0x24 : '\n',
+ 0x24 : 'return' ,
+ 0x30 : 'tab' ,
+ 0x31 : 'space' ,
+ 0x33 : 'delete' ,
+ 0x35 : 'escape' ,
+ 0x37 : 'command' ,
+ 0x38 : 'shift' ,
+ 0x39 : 'capslock' ,
+ 0x3A : 'option' ,
+ 0x3A : 'alternate' ,
+ 0x3B : 'control' ,
+ 0x3C : 'rightshift' ,
+ 0x3D : 'rightoption' ,
+ 0x3E : 'rightcontrol' ,
+ 0x3F : 'function' ,
+}
 
 # Taken from ev_keymap.h
 # http://www.opensource.apple.com/source/IOHIDFamily/IOHIDFamily-86.1/IOHIDSystem/IOKit/hidsystem/ev_keymap.h
@@ -122,13 +190,13 @@ special_key_translate_table = {
 class PyKeyboard(PyKeyboardMeta):
 
     def __init__(self):
-      self.shift_key = 'shift'
-      self.modifier_table = {'Shift':False,'Command':False,'Control':False,'Alternate':False}
-        
+        self.shift_key = 'shift'
+        self.modifier_table = {'Shift':False,'Command':False,'Control':False,'Alternate':False}
+
     def press_key(self, key):
-        if key.title() in self.modifier_table: 
+        if key.title() in self.modifier_table:
             self.modifier_table.update({key.title():True})
-                    
+
         if key in special_key_translate_table:
             self._press_special_key(key, True)
         else:
@@ -137,7 +205,7 @@ class PyKeyboard(PyKeyboardMeta):
     def release_key(self, key):
         # remove the key
         if key.title() in self.modifier_table: self.modifier_table.update({key.title():False})
-        
+
         if key in special_key_translate_table:
             self._press_special_key(key, False)
         else:
@@ -162,7 +230,7 @@ class PyKeyboard(PyKeyboardMeta):
             for mkey in self.modifier_table:
                 if self.modifier_table[mkey]:
                     if len(mkeyStr)>1: mkeyStr = mkeyStr+' ^ '
-                    mkeyStr = mkeyStr+'Quartz.kCGEventFlagMask'+mkey                    
+                    mkeyStr = mkeyStr+'Quartz.kCGEventFlagMask'+mkey
             if len(mkeyStr)>1: eval('Quartz.CGEventSetFlags(event, '+mkeyStr+')')
             Quartz.CGEventPost(Quartz.kCGHIDEventTap, event)
             if key.lower() == "shift":
@@ -172,7 +240,7 @@ class PyKeyboard(PyKeyboardMeta):
             raise RuntimeError("Key {} not implemented.".format(key))
 
     def _press_special_key(self, key, down):
-        """ Helper method for special keys. 
+        """ Helper method for special keys.
 
         Source: http://stackoverflow.com/questions/11045814/emulate-media-key-press-on-mac
         """
@@ -193,6 +261,10 @@ class PyKeyboard(PyKeyboardMeta):
         Quartz.CGEventPost(0, ev.Quartz.CGEvent())
 
 class PyKeyboardEvent(PyKeyboardEventMeta):
+    def __init__(self,diagnostic=False):
+        self.diagnostic = diagnostic
+        PyKeyboardEventMeta.__init__(self)
+
     def run(self):
         tap = Quartz.CGEventTapCreate(
             Quartz.kCGSessionEventTap,
@@ -204,17 +276,50 @@ class PyKeyboardEvent(PyKeyboardEventMeta):
             None)
 
         loopsource = Quartz.CFMachPortCreateRunLoopSource(None, tap, 0)
-        loop = Quartz.CFRunLoopGetCurrent()
-        Quartz.CFRunLoopAddSource(loop, loopsource, Quartz.kCFRunLoopDefaultMode)
+        self.loop = Quartz.CFRunLoopGetCurrent()
+        Quartz.CFRunLoopAddSource(self.loop, loopsource, Quartz.kCFRunLoopDefaultMode)
         Quartz.CGEventTapEnable(tap, True)
 
         while self.state:
             Quartz.CFRunLoopRunInMode(Quartz.kCFRunLoopDefaultMode, 5, False)
 
+    def escape(self, key):
+        return key_code_translate_table[key] == 'escape'
+
+    def stop(self):
+        """Stop listening for keyboard input events."""
+        Quartz.CFRunLoopStop(self.loop)
+        self.state = False
+
+    def _diagnostic(self,key,event):
+        print('\n---Keyboard Event Diagnostic---')
+        #print('MessageName:', event.MessageName)
+        #print('Message:', event.Message)
+        #print('Time:', event.Time)
+        #print('Window:', event.Window)
+        #print('WindowName:', event.WindowName)
+        #print('Ascii:', event.Ascii, ',', chr(event.Ascii))
+        print('Key:',key_code_translate_table[key])
+        print('Key Code:',key)
+        #print('KeyID:', event.KeyID)
+        #print('ScanCode:', event.ScanCode)
+        #print('Extended:', event.Extended)
+        #print('Injected:', event.Injected)
+        #print('Alt', event.Alt)
+        #print('Transition', event.Transition)
+        print('---')
+
     def handler(self, proxy, type, event, refcon):
         key = Quartz.CGEventGetIntegerValueField(event, Quartz.kCGKeyboardEventKeycode)
+        if self.escape(key):  # A chance to escape
+            self.stop()
+
+        if self.diagnostic:
+            self._diagnostic(key,event)
+
         if type == Quartz.kCGEventKeyDown:
             self.key_press(key)
+
         elif type == Quartz.kCGEventKeyUp:
             self.key_release(key)
 
