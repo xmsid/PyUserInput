@@ -245,7 +245,6 @@ class PyKeyboardEvent(PyKeyboardEventMeta):
 
     def handler(self, proxy, type, event, refcon):
         key = Quartz.CGEventGetIntegerValueField(event, Quartz.kCGKeyboardEventKeycode)
-        print key_code_translate_table[key]
         if self.escape(key):  # A chance to escape
             self.stop()
 
