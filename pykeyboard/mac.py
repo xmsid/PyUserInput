@@ -89,6 +89,8 @@ character_translate_table = {
     'function' : 0x3F,
 }
 
+#inverse of character_translate_table for key code to name lookups
+key_code_translate_table = dict((key_code,key_name) for key_name,key_code in character_translate_table.iteritems())
 
 # Taken from ev_keymap.h
 # http://www.opensource.apple.com/source/IOHIDFamily/IOHIDFamily-86.1/IOHIDSystem/IOKit/hidsystem/ev_keymap.h
@@ -122,8 +124,8 @@ special_key_translate_table = {
 class PyKeyboard(PyKeyboardMeta):
 
     def __init__(self):
-      self.shift_key = 'shift'
-      self.modifier_table = {'Shift':False,'Command':False,'Control':False,'Alternate':False}
+        self.shift_key = 'shift'
+        self.modifier_table = {'Shift':False,'Command':False,'Control':False,'Alternate':False}
 
     def press_key(self, key):
         if key.title() in self.modifier_table:
@@ -193,6 +195,10 @@ class PyKeyboard(PyKeyboardMeta):
         Quartz.CGEventPost(0, ev.CGEvent())
 
 class PyKeyboardEvent(PyKeyboardEventMeta):
+    def __init__(self,diagnostic=False):
+        self.diagnostic = diagnostic
+        PyKeyboardEventMeta.__init__(self)
+
     def run(self):
         tap = Quartz.CGEventTapCreate(
             Quartz.kCGSessionEventTap,
@@ -204,17 +210,50 @@ class PyKeyboardEvent(PyKeyboardEventMeta):
             None)
 
         loopsource = Quartz.CFMachPortCreateRunLoopSource(None, tap, 0)
-        loop = Quartz.CFRunLoopGetCurrent()
-        Quartz.CFRunLoopAddSource(loop, loopsource, Quartz.kCFRunLoopDefaultMode)
+        self.loop = Quartz.CFRunLoopGetCurrent()
+        Quartz.CFRunLoopAddSource(self.loop, loopsource, Quartz.kCFRunLoopDefaultMode)
         Quartz.CGEventTapEnable(tap, True)
 
         while self.state:
             Quartz.CFRunLoopRunInMode(Quartz.kCFRunLoopDefaultMode, 5, False)
 
+    def escape(self, key):
+        return key_code_translate_table[key] == 'escape'
+
+    def stop(self):
+        """Stop listening for keyboard input events."""
+        Quartz.CFRunLoopStop(self.loop)
+        self.state = False
+
+    def _diagnostic(self,key,event):
+        print('\n---Keyboard Event Diagnostic---')
+        #print('MessageName:', event.MessageName)
+        #print('Message:', event.Message)
+        #print('Time:', event.Time)
+        #print('Window:', event.Window)
+        #print('WindowName:', event.WindowName)
+        #print('Ascii:', event.Ascii, ',', chr(event.Ascii))
+        print('Key:',key_code_translate_table[key])
+        print('Key Code:',key)
+        #print('KeyID:', event.KeyID)
+        #print('ScanCode:', event.ScanCode)
+        #print('Extended:', event.Extended)
+        #print('Injected:', event.Injected)
+        #print('Alt', event.Alt)
+        #print('Transition', event.Transition)
+        print('---')
+
     def handler(self, proxy, type, event, refcon):
         key = Quartz.CGEventGetIntegerValueField(event, Quartz.kCGKeyboardEventKeycode)
+        if self.escape(key):  # A chance to escape
+            self.stop()
+
+        if self.diagnostic:
+            self._diagnostic(key,event)
+
         if type == Quartz.kCGEventKeyDown:
             self.key_press(key)
+
         elif type == Quartz.kCGEventKeyUp:
             self.key_release(key)
 
