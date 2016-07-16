@@ -33,10 +33,7 @@ class TestCodeFormat(unittest.TestCase):
                                 'W293']
         style = pycodestyle.StyleGuide(quiet=False, ignore=ignore_these_for_now)
 
-        visible_dirs = [(dir, files) for dir, subdirs, files in os.walk('.') if not dir.startswith('./.')]
-        dir_files = [[os.path.join(dir, file) for file in files if file.endswith('.py')] for dir, files in visible_dirs]
-        files = itertools.chain(*dir_files)
-
-        result = style.check_files(files)
+        style.input_dir('.')
+        result = style.check_files()
         self.assertEqual(result.total_errors, 0,
                          "Found code style errors (and warnings).")
