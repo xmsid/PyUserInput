@@ -1,4 +1,8 @@
 import ctypes
+import string
+import time
+import sys
+
 
 LONG = ctypes.c_long
 DWORD = ctypes.c_ulong
@@ -279,8 +283,6 @@ def Hardware(message, parameter=0):
 
 ################################################################################
 
-import string
-
 UPPER = frozenset('~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:"ZXCVBNM<>?')
 LOWER = frozenset("`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./")
 ORDER = string.ascii_letters + string.digits + ' \b\r\t'
@@ -329,7 +331,6 @@ def keyboard_stream(string):
 
 ################################################################################
 
-import time, sys
 
 def main():
     time.sleep(5)

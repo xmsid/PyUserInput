@@ -138,7 +138,8 @@ class PyKeyboard(PyKeyboardMeta):
 
     def release_key(self, key):
         # remove the key
-        if key.title() in self.modifier_table: self.modifier_table.update({key.title():False})
+        if key.title() in self.modifier_table:
+            self.modifier_table.update({key.title():False})
 
         if key in special_key_translate_table:
             self._press_special_key(key, False)
@@ -163,9 +164,11 @@ class PyKeyboard(PyKeyboardMeta):
             mkeyStr = ''
             for mkey in self.modifier_table:
                 if self.modifier_table[mkey]:
-                    if len(mkeyStr)>1: mkeyStr = mkeyStr+' ^ '
+                    if len(mkeyStr)>1:
+                        mkeyStr = mkeyStr+' ^ '
                     mkeyStr = mkeyStr+'Quartz.kCGEventFlagMask'+mkey
-            if len(mkeyStr)>1: eval('Quartz.CGEventSetFlags(event, '+mkeyStr+')')
+            if len(mkeyStr)>1:
+                eval('Quartz.CGEventSetFlags(event, '+mkeyStr+')')
             Quartz.CGEventPost(Quartz.kCGHIDEventTap, event)
             if key.lower() == "shift":
               time.sleep(.1)
