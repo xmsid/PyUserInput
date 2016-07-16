@@ -165,7 +165,7 @@ def pressAndHold(*args):
     for i in args:
         win32api.keybd_event(VK_CODE[i], 0,0,0)
         time.sleep(.05)
-           
+
 def pressHoldRelease(*args):
     '''
     press and hold passed in strings. Once held, release
@@ -178,12 +178,12 @@ def pressHoldRelease(*args):
     for i in args:
         win32api.keybd_event(VK_CODE[i], 0,0,0)
         time.sleep(.05)
-            
+
     for i in args:
             win32api.keybd_event(VK_CODE[i],0 ,win32con.KEYEVENTF_KEYUP ,0)
             time.sleep(.1)
-            
-        
+
+
 
 def release(*args):
     '''
@@ -196,7 +196,7 @@ def release(*args):
 
 
 def typer(string=None,*args):
-##    time.sleep(4)
+    #  time.sleep(4)
     for i in string:
         if i == ' ':
             win32api.keybd_event(VK_CODE['spacebar'], 0,0,0)
@@ -526,8 +526,8 @@ def typer(string=None,*args):
             win32api.keybd_event(VK_CODE['left_shift'],0 ,win32con.KEYEVENTF_KEYUP ,0)
             win32api.keybd_event(VK_CODE['z'],0 ,win32con.KEYEVENTF_KEYUP ,0)
 
-    
-        else:    
+
+        else:
             win32api.keybd_event(VK_CODE[i], 0,0,0)
             time.sleep(.05)
             win32api.keybd_event(VK_CODE[i],0 ,win32con.KEYEVENTF_KEYUP ,0)

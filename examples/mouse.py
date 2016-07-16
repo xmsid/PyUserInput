@@ -2,15 +2,16 @@
 
 import logging
 import daemon
-from socket import gethostname;
+from socket import gethostname
 from pymouse import PyMouse
-import random, time
+import random
+import time
 from signal import signal, SIGINT
 
 with daemon.DaemonContext():
 
     def stop(signum, frame):
-        cleanup_stop_thread();
+        cleanup_stop_thread()
         sys.exit()
 
     signal(SIGINT, stop)

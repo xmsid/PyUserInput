@@ -1,9 +1,11 @@
 import unittest
 import pycodestyle
+import os
+import os.path
+import itertools
 
 
 class TestCodeFormat(unittest.TestCase):
-
     def test_conformance(self):
         """Test that we conform to PEP-8."""
         ignore_these_for_now = ['E111',
@@ -24,11 +26,17 @@ class TestCodeFormat(unittest.TestCase):
                                 'E301',
                                 'E302',
                                 'E303',
+                                'E305',
                                 'E501',
                                 'W391',
                                 'W292',
                                 'W293']
-        style = pycodestyle.StyleGuide(quiet=True, ignore=ignore_these_for_now)
-        result = style.input_dir('./')
+        style = pycodestyle.StyleGuide(quiet=False, ignore=ignore_these_for_now)
+
+        visible_dirs = [(dir, files) for dir, subdirs, files in os.walk('.') if not dir.startswith('./.')]
+        dir_files = [[os.path.join(dir, file) for file in files if file.endswith('.py')] for dir, files in visible_dirs]
+        files = itertools.chain(*dir_files)
+
+        result = style.check_files(files)
         self.assertEqual(result.total_errors, 0,
                          "Found code style errors (and warnings).")

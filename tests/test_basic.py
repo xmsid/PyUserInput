@@ -14,7 +14,10 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pymouse import PyMouse
-import random, time
+import random
+import time
+
+
 try:
     from pymouse import PyMouseEvent
 
