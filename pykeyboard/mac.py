@@ -90,7 +90,7 @@ character_translate_table = {
 }
 
 #inverse of character_translate_table for key code to name lookups
-key_code_translate_table = dict((key_code,key_name) for key_name,key_code in character_translate_table.iteritems())
+key_code_translate_table = dict((key_code, key_name) for key_name, key_code in character_translate_table.items())
 
 # Taken from ev_keymap.h
 # http://www.opensource.apple.com/source/IOHIDFamily/IOHIDFamily-86.1/IOHIDSystem/IOKit/hidsystem/ev_keymap.h
