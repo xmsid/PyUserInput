@@ -17,12 +17,12 @@ dependencies = []
 if sys.platform == 'darwin':  # Mac
     dependencies.append('pyobjc-framework-Quartz')
 elif sys.platform == 'win32':  # Windows
-    dependencies.extend(['pyHook', 'pywin32'])
+    dependencies.extend(['pyHook', 'pypiwin32'])
 else:  # X11 (LInux)
     dependencies.append('python-xlib')
 
 setup(name='PyUserInput',
-      version='0.1.11',
+      version='0.1.12',
       description='A simple, cross-platform module for mouse and keyboard control',
       long_description=long_description(),
       author='Paul Barton <pablo.barton@gmail.com>, Pepijn de Vos <pepijndevos@gmail.com>',
