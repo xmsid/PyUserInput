@@ -22,7 +22,7 @@ else:  # X11 (LInux)
     dependencies.append('python-xlib')
 
 setup(name='PyUserInput',
-      version='0.1.11',
+      version='0.1.12',
       description='A simple, cross-platform module for mouse and keyboard control',
       long_description=long_description(),
       author='Paul Barton <pablo.barton@gmail.com>, Pepijn de Vos <pepijndevos@gmail.com>',
