@@ -17,7 +17,7 @@ dependencies = []
 if sys.platform == 'darwin':  # Mac
     dependencies.append('pyobjc-framework-Quartz')
 elif sys.platform == 'win32':  # Windows
-    dependencies.extend(['pyHook', 'pywin32'])
+    dependencies.extend(['pyHook', 'pypiwin32'])
 else:  # X11 (LInux)
     dependencies.append('python-xlib')
 
