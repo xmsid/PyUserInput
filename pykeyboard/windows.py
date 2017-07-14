@@ -18,6 +18,7 @@ import win32api
 from win32con import *
 import pythoncom
 
+from . import logger
 from .base import PyKeyboardMeta, PyKeyboardEventMeta
 
 import time
@@ -285,21 +286,21 @@ class PyKeyboardEvent(PyKeyboardEventMeta):
         and easily available. It will print out information regarding the event
         instead of passing information along to self.tap()
         """
-        print('\n---Keyboard Event Diagnostic---')
-        print('MessageName:', event.MessageName)
-        print('Message:', event.Message)
-        print('Time:', event.Time)
-        print('Window:', event.Window)
-        print('WindowName:', event.WindowName)
-        print('Ascii:', event.Ascii, ',', chr(event.Ascii))
-        print('Key:', event.Key)
-        print('KeyID:', event.KeyID)
-        print('ScanCode:', event.ScanCode)
-        print('Extended:', event.Extended)
-        print('Injected:', event.Injected)
-        print('Alt', event.Alt)
-        print('Transition', event.Transition)
-        print('---')
+        logger.info('\n---Keyboard Event Diagnostic---')
+        logger.info('MessageName:', event.MessageName)
+        logger.info('Message:', event.Message)
+        logger.info('Time:', event.Time)
+        logger.info('Window:', event.Window)
+        logger.info('WindowName:', event.WindowName)
+        logger.info('Ascii:', event.Ascii, ',', chr(event.Ascii))
+        logger.info('Key:', event.Key)
+        logger.info('KeyID:', event.KeyID)
+        logger.info('ScanCode:', event.ScanCode)
+        logger.info('Extended:', event.Extended)
+        logger.info('Injected:', event.Injected)
+        logger.info('Alt', event.Alt)
+        logger.info('Transition', event.Transition)
+        logger.info('---')
 
     def escape(self, event):
         return event.KeyID == VK_ESCAPE

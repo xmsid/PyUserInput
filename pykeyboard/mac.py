@@ -16,6 +16,8 @@
 import time
 import Quartz
 from AppKit import NSSystemDefined, NSEvent
+
+from . import logger
 from .base import PyKeyboardMeta, PyKeyboardEventMeta
 
 # Taken from events.h
@@ -229,22 +231,22 @@ class PyKeyboardEvent(PyKeyboardEventMeta):
         self.state = False
 
     def _diagnostic(self,key,event):
-        print('\n---Keyboard Event Diagnostic---')
-        #print('MessageName:', event.MessageName)
-        #print('Message:', event.Message)
-        #print('Time:', event.Time)
-        #print('Window:', event.Window)
-        #print('WindowName:', event.WindowName)
-        #print('Ascii:', event.Ascii, ',', chr(event.Ascii))
-        print('Key:',key_code_translate_table[key])
-        print('Key Code:',key)
-        #print('KeyID:', event.KeyID)
-        #print('ScanCode:', event.ScanCode)
-        #print('Extended:', event.Extended)
-        #print('Injected:', event.Injected)
-        #print('Alt', event.Alt)
-        #print('Transition', event.Transition)
-        print('---')
+        logger.info('\n---Keyboard Event Diagnostic---')
+        logger.debug('MessageName:', event.MessageName)
+        logger.debug('Message:', event.Message)
+        logger.debug('Time:', event.Time)
+        logger.debug('Window:', event.Window)
+        logger.debug('WindowName:', event.WindowName)
+        logger.debug('Ascii:', event.Ascii, ',', chr(event.Ascii))
+        logger.info('Key:',key_code_translate_table[key])
+        logger.info('Key Code:',key)
+        logger.debug('KeyID:', event.KeyID)
+        logger.debug('ScanCode:', event.ScanCode)
+        logger.debug('Extended:', event.Extended)
+        logger.debug('Injected:', event.Injected)
+        logger.debug('Alt', event.Alt)
+        logger.debug('Transition', event.Transition)
+        logger.info('---')
 
     def handler(self, proxy, type, event, refcon):
         key = Quartz.CGEventGetIntegerValueField(event, Quartz.kCGKeyboardEventKeycode)
