@@ -21,6 +21,7 @@ from Xlib.protocol import rq
 import Xlib.XK
 import Xlib.keysymdef.xkb
 
+from . import logger
 from .base import PyKeyboardMeta, PyKeyboardEventMeta
 
 import time
@@ -234,9 +235,9 @@ class PyKeyboardEvent(PyKeyboardEventMeta):
         #self.configure_keys()
 
         #Direct access to the display's keycode-to-keysym array
-        #print('Keycode to Keysym map')
-        #for i in range(len(self.display._keymap_codes)):
-        #    print('{0}: {1}'.format(i, self.display._keymap_codes[i]))
+        logger.debug('Keycode to Keysym map')
+        for i in range(len(self.display._keymap_codes)):
+            logger.debug('{0}: {1}'.format(i, self.display._keymap_codes[i]))
 
         PyKeyboardEventMeta.__init__(self, capture)
 
@@ -341,8 +342,8 @@ class PyKeyboardEvent(PyKeyboardEventMeta):
         try:
             char = self.keysym_to_string[keysym]
         except KeyError:
-            print('Unable to determine character.')
-            print('Keycode: {0} KeySym {1}'.format(keycode, keysym))
+            logger.info('Unable to determine character.')
+            logger.info('Keycode: {0} KeySym {1}'.format(keycode, keysym))
             return None
         else:
             return char
@@ -404,7 +405,7 @@ class PyKeyboardEvent(PyKeyboardEventMeta):
             self.lock_meaning = 'Caps_Lock'
         else:
             self.lock_meaning = None
-        #print('Lock is bound to {0}'.format(self.lock_meaning))
+        logger.debug('Lock is bound to {0}'.format(self.lock_meaning))
 
         #Need to find out which Mod# to use for Alt, Num_Lock, Super, and
         #Mode_switch
