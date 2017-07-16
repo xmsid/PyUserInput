@@ -21,8 +21,10 @@ from Xlib.protocol import rq
 import Xlib.XK
 import Xlib.keysymdef.xkb
 
-from . import logger
 from .base import PyKeyboardMeta, PyKeyboardEventMeta
+
+import logging
+logger = logging.getLogger(__name__)
 
 import time
 import string

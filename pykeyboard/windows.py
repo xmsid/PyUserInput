@@ -18,11 +18,12 @@ import win32api
 from win32con import *
 import pythoncom
 
-from . import logger
 from .base import PyKeyboardMeta, PyKeyboardEventMeta
 
 import time
 
+import logging
+logger = logging.getLogger(__name__)
 
 class SupportError(Exception):
     """For keys not supported on this system"""

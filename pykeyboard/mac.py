@@ -17,8 +17,10 @@ import time
 import Quartz
 from AppKit import NSSystemDefined, NSEvent
 
-from . import logger
 from .base import PyKeyboardMeta, PyKeyboardEventMeta
+
+import logging
+logger = logging.getLogger(__name__)
 
 # Taken from events.h
 # /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Headers/Events.h
