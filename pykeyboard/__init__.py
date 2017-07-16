@@ -23,9 +23,6 @@ http://github.com/SavinaRoja/PyUserInput
 """
 
 import sys
-import logging
-
-logger = logging.getLogger("PyUserInput")
 
 if sys.platform.startswith('java'):
     from .java_ import PyKeyboard
