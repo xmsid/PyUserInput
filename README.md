@@ -4,12 +4,9 @@ PyUserInput
 A module for cross-platform control of the mouse and keyboard in python that is
 simple to use.
 
-Mouse control should work on Windows, Mac, and X11 (most Linux systems).
-Scrolling is implemented, but users should be aware that variations may
-exist between platforms and applications.
+Mouse control and capture should be fairly complete and mature on all supported platforms. Any incompatabilities should be reported.
 
-Keyboard control works on X11(linux) and Windows systems. Mac control is a work
-in progress.
+Basic keyboard handling should work, but known issues exist. Contributions welcome. For some less-common keyboard keys and layouts, you may want to look at [Pynput](https://github.com/moses-palmer/pynput)
 
 Dependencies
 ------------
@@ -148,18 +145,6 @@ A Short Todo List
 These are a few things I am considering for future development in
 PyUserInput:
 
- * Ensuring that PyMouse capturing works for all platforms
- * Implement PyKeyboard capturing (add PyKeyboardEvent for Mac as well)
- * PyMouse dynamic delta scrolling (available in Mac and Windows, hard to standardize)
- * Make friends with more Mac developers, testing help is needed...
-
-
-Many thanks to
---------------
-
-[Pepijn de Vos](https://github.com/pepijndevos) - For making
-[PyMouse](https://github.com/pepijndevos/PyMouse) and allowing me to modify
-and distribute it along with PyKeyboard.
-
-[Jack Grigg](https://github.com/pythonian4000) - For contributions to
-cross-platform scrolling in PyMouse.
+ * Get rid of PyHook
+ * Make PyKeyboard work for less-common keys and layouts
+ * Make friends with more developers, help is needed...
